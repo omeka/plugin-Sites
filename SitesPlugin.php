@@ -405,9 +405,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         }
         $has_container = $db->getTable('RecordRelationsProperty')->findByVocabAndPropertyName(SIOC, 'has_container');
         $collections = $this->_findSiteContexts($has_container, 'SiteContext_Collection', $siteItem->id);
-        $exhibits = $this->_findSiteContexts($has_container, 'SiteContext_Exhibit', $siteItem->id);
-        $exhibitSections = $this->_findSiteContexts($has_container, 'SiteContext_ExhibitSection', $siteItem->id);
-        $exhibitSectionPages = $this->_findSiteContexts($has_container, 'SiteContext_ExhibitSectionPage', $siteItem->id);
         $html = "<div id='site-contexts'>";
         $html .= "<h$hlevel>Original Context</h$hlevel>";
         $html .= "<p><a href='{$site->url}'>". $site->title . "</a></p>";
@@ -418,13 +415,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             foreach($collections as $collection) {
                 $html .= "<p><a href='" . $collection->url . "'>" . $collection->title . "</a>: ";
                 $html .= snippet($collection->description, 0, 100) . "</p>";
-            }
-        }
-        if(!empty($exhibits)) {
-            $html .= "<h$nextHlevel>Exhibit(s)</h$nextHlevel>";
-            foreach($exhibits as $exhibit) {
-                $html .= "<p><a href='" . $exhibit->url . "'>" . $exhibit->title . "</a>: ";
-                $html .= metadata($exhibit, array('Dublin Core', 'Description'), array('snippet'=>100)) . "</p>";
             }
         }
         $html .= "<p><a href='{$siteItem->url}'>View Original</a>";

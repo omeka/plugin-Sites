@@ -13,7 +13,9 @@ function sites_link_to_site_for_item($item = null)
         $item = get_current_record('item');
     }
     $site = $db->getTable('SiteItem')->findSiteForItem($item->id);
-    return "<a href='{$site->url}'>{$site->title}</a>";
+    if($site) {
+        return "<a href='{$site->url}'>{$site->title}</a>";
+    }
 }
 
 /**

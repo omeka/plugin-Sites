@@ -11,7 +11,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'uninstall',
         'upgrade',
         'site_browse_sql',
-        //'define_routes',
+        'define_routes',
         'public_theme_header',
         'public_items_show',
         'admin_items_show_sidebar',

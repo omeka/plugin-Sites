@@ -22,12 +22,11 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         } catch (Exception $e) {
 
         }
-
         $responseArray = array('id' => $id, 'date_approved'=>$site->date_approved);
         $this->_helper->json(json_encode($responseArray));
     }
 
-    private function sendApprovalEmail($site)
+    public function sendApprovalEmail($site)
     {
         $to = $site->admin_email;
         $from = get_option('administrator_email');
@@ -35,9 +34,6 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $body = "Thank you for participating in the Omeka Commons. blah blah blah
         You will need to enter your Omeka Commons API key into the configuration form
         of the Commons plugin you installed on your Omeka site.
-
-        You can obtain your API key anytime in the next seven days by following
-        this link: $tokenUrl
 
         Copy and paste the API key into the API key input on the form and save the configuration.
         You will then be able to send individual items and entire collections to be preserved in the Commons.

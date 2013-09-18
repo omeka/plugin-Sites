@@ -405,9 +405,10 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         }
         $has_container = $db->getTable('RecordRelationsProperty')->findByVocabAndPropertyName(SIOC, 'has_container');
         $collections = $this->_findSiteContexts($has_container, 'SiteContext_Collection', $siteItem->id);
+        $site_url = $site->url;
         $html = "<div id='site-contexts'>";
         $html .= "<h$hlevel>Original Context</h$hlevel>";
-        $html .= "<p><a href='{$site->url}'>". $site->title . "</a></p>";
+        $html .= "<p><a href='{$site_url}'>". $site->title . "</a></p>";
         $html .= "<p>". $site->description . "</p>";
         $nextHlevel = $hlevel +1;
         if(!empty($collections)) {

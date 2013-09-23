@@ -48,4 +48,9 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $mail->addHeader('X-Mailer', 'PHP/' . phpversion());
         $mail->send();
     }
+    
+    protected function _redirectAfterEdit($site)
+    {
+        
+    }
 }

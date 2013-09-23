@@ -22,6 +22,8 @@ class Site extends Omeka_Record_AbstractRecord
     public $author_info;
     public $omeka_version;
     public $commons_settings;
+    public $public;
+    public $featured;
 
 
     protected $_related = array('SiteOwner'=>'getSiteOwner');
@@ -30,6 +32,7 @@ class Site extends Omeka_Record_AbstractRecord
     {
         $this->_mixins[] = new Mixin_Owner($this);
         $this->_mixins[] = new Mixin_Search($this);
+        $this->_mixins[] = new Mixin_PublicFeatured($this);
     }    
     
     public function beforeSave()
@@ -56,6 +59,9 @@ class Site extends Omeka_Record_AbstractRecord
     }
     
     public function getRecordUrl($action) {
+        if(is_admin_theme()) {
+            return parent::getRecordUrl($action);
+        }
         $url = url("/sites/display-case/$action/id/" . $this->id);
         return $url;
     }
@@ -68,7 +74,7 @@ class Site extends Omeka_Record_AbstractRecord
             break;
                 
         }
-        parent::getProperty($property);
+        return parent::getProperty($property);
     }
     
     public function totalItems()

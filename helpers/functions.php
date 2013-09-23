@@ -74,5 +74,10 @@ function sites_site_logo($site)
     return '';
 }
 
+function get_random_featured_site()
+{
+    return get_db()->getTable('Site')->findRandomFeatured();
+}
+
 
 

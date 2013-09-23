@@ -69,6 +69,12 @@ class Table_Site extends Omeka_Db_Table
         $select->order('RAND()');
     }
 
+    public function findRandomFeatured()
+    {
+        $select = $this->getSelect()->where('sites.featured = 1')->order('RAND()')->limit(1);
+        return $this->fetchObject($select);
+    }
+    
     protected function recordFromData($data)
     {
         $record = parent::recordFromData($data);

@@ -324,23 +324,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $old = $args['old_version'];
         $new = $args['new_version'];
         $db = get_db();
-        if($new == '1.1') {
+        
+        if($new == '1.2') {
             $sql = "
-            CREATE TABLE IF NOT EXISTS `$db->SiteFamily` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `name` text NULL,
-            `description` text NULL,
-            PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+            ALTER TABLE `$db->Site` ADD `public` BOOLEAN NULL,
+            ADD `featured` BOOLEAN NULL
             ";
-            
-            $db->query($sql);       
-
-            $sql = "
-            ALTER TABLE `omeka_sites` CHANGE `site_owner_id` `site_family_id` INT( 10 ) UNSIGNED NULL DEFAULT NULL,
-            ALTER TABLE `omeka_sites` ADD `version` TINYTEXT NOT NULL AFTER `author_info`  
-            ";
-            
             $db->query($sql);
         }
     }

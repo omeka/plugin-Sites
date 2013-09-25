@@ -23,28 +23,28 @@ $columns = array('title', 'content_summary', 'join_reason', 'description');
 </section>
 
 <section class="three columns omega">
-        <div id="save" class="panel">
-            <?php echo $this->formSubmit('submit', __('Save Changes'), array('id'=>'save-changes', 'class'=>'submit big green button')); ?>
-            <?php 
-                set_theme_base_url('public');
-                $url = url("/sites/display-case/show/id/" . $site->id);
-                revert_theme_base_url();
-            ?>
-            
-            <a href="<?php echo $url; ?>" class="big blue button" target="_blank"><?php echo __('View Public Page'); ?></a>
+    <div id="save" class="panel">
+        <?php echo $this->formSubmit('submit', __('Save Changes'), array('id'=>'save-changes', 'class'=>'submit big green button')); ?>
+        <?php 
+            set_theme_base_url('public');
+            $url = url("/sites/display-case/show/id/" . $site->id);
+            revert_theme_base_url();
+        ?>
+        <a href="<?php echo $url; ?>" class="big blue button" target="_blank"><?php echo __('View Public Page'); ?></a>
+        <div id="public-featured">
             <div class="featured">
                 <label for="featured"><?php echo __('Featured'); ?>:</label> 
                 <?php echo $this->formCheckbox('featured', $site->featured, array(), array('1', '0')); ?>
             </div>
-            <div class="approve">
-                 
-                <?php if(is_null($site->date_approved)): ?>
-                <label for="approve"><?php echo __('Approve'); ?>:</label>
-                <?php echo $this->formCheckbox('approved', 1, array(), array('1', '0')); ?>
-                <?php else: ?>
-                <p>Approved: </p><?php echo metadata($site, 'date_approved');?>
-                <?php endif;?>
-            </div>                        
+        </div>
+        <div class="approve">
+            <?php if(is_null($site->date_approved)): ?>
+            <label for="approve"><?php echo __('Approve'); ?>:</label>
+            <?php echo $this->formCheckbox('approved', 1, array(), array('1', '0')); ?>
+            <?php else: ?>
+            <p>Approved: <?php echo metadata($site, 'date_approved');?></p>
+            <?php endif;?>
+        </div>                        
     </div>
 </section>
 </form>

@@ -51,6 +51,6 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
     
     protected function _redirectAfterEdit($site)
     {
-        
+        $this->_helper->redirector('');
     }
 }

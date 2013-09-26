@@ -10,7 +10,7 @@ var Sites = {
 	
 	approveResponseHandler: function(response, a, b) {
 		response = JSON.parse(response);
-		jQuery(Sites.element).replaceWith(response.added);
+		jQuery(Sites.element).replaceWith(response.date_approved);
 	},
 
 };

@@ -17,7 +17,9 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $site = $db->getTable('Site')->find($id);
         $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
         $site->save();        
-        mkdir(SITES_PLUGIN_DIR . '/views/public/images/' . $site->id, 0755);
+        if(!file_exists(SITES_PLUGIN_DIR . '/views/public/images/' . $site->id)) {
+            mkdir(SITES_PLUGIN_DIR . '/views/public/images/' . $site->id, 0755);
+        }
         $responseArray = array('id' => $id, 'date_approved'=>$site->date_approved);
         $this->_helper->json(json_encode($responseArray));
         $this->sendApprovalEmail($site);

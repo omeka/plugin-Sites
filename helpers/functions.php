@@ -69,7 +69,10 @@ function sites_random_site_item($site)
 function sites_site_logo($site)
 {
     if(isset($site->commons_settings['logo'])) {
-        return "<img id='sites-logo' src='" . $site->commons_settings['logo'] . "'/>";
+        $view = get_view();
+        $view->addAssetPath(PLUGIN_DIR . '/Sites/views/shared/images/' . $site->id, WEB_ROOT . '/plugins/Sites/views/shared/images/' . $site->id);
+        $url = src( $site->commons_settings['logo']);
+        return "<img id='sites-logo' src='$url' />";
     }
     return '';
 }

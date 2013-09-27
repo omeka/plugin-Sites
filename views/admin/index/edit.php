@@ -12,6 +12,7 @@ $columns = array('title', 'content_summary', 'join_reason', 'description');
 
 <form method="post">
 <section class="seven columns alpha">
+<?php echo sites_site_logo($site); ?>
 <?php foreach($columns as $column): ?>
 <div class="element" id='<?php echo $column; ?>'>
         <div class="field two columns alpha">

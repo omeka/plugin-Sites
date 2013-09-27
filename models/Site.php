@@ -48,6 +48,9 @@ class Site extends Omeka_Record_AbstractRecord
         $this->setSearchTextTitle($this->title);
         $this->addSearchText($this->description);
         $this->addSearchText($this->content_summary);
+        if(!is_null($this->date_approved) && !file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $this->id)) {
+            mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $this->id, 0755);
+        }
     }    
     
     public function getSiteAggregation()
@@ -80,6 +83,20 @@ class Site extends Omeka_Record_AbstractRecord
     public function totalItems()
     {
         return $this->_db->getTable('SiteItem')->count(array('site_id'=>$this->id));
+    }
+    
+    /**
+     * overrides parent so that if 'approve' is checked we set the date_approved
+     */
+    protected function filterPostData($post) 
+    {
+        debug('filter');
+        debug(print_r($post, true));
+        if($post['approved']) {
+            debug('approved');
+            $post['date_approved'] = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
+        }
+        return $post;
     }
     
 }

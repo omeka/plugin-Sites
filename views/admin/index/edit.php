@@ -41,7 +41,7 @@ $columns = array('title', 'content_summary', 'join_reason', 'description');
         <div class="approve">
             <?php if(is_null($site->date_approved)): ?>
             <label for="approve"><?php echo __('Approve'); ?>:</label>
-            <?php echo $this->formCheckbox('approved', 1, array(), array('1', '0')); ?>
+            <?php echo $this->formCheckbox('approved', 0, array(), array('1', '0')); ?>
             <?php else: ?>
             <p>Approved: <?php echo metadata($site, 'date_approved');?></p>
             <?php endif;?>

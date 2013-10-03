@@ -1,10 +1,10 @@
-
 var Sites = {
 	
 	approve: function() {
 		id = jQuery(this).attr('id').substring(8);
 		Sites.element = this;
-		jQuery.post("approve/" + id, {}, Sites.approveResponseHandler);
+		url = webRoot + '/admin/sites/approve';
+		jQuery.post(url, {"id" : id}, Sites.approveResponseHandler);
 	
 	},
 	

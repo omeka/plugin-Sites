@@ -1,5 +1,6 @@
 <?php
 queue_js_file('sites');
+queue_js_string("var webRoot = '" . WEB_ROOT . "';");
 queue_css_file('sites');
 $head = array('bodyclass' => 'sites primary',
               'title' => html_escape('Sites'));

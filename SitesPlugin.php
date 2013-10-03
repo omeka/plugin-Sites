@@ -344,7 +344,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                 array(
                     'module'        => 'sites',
                     'controller'    => 'index',
-                    'action'        => 'browse'
+                    'action'        => 'browse',
                     )
             )
         );

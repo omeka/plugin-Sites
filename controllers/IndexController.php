@@ -14,15 +14,21 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
     {
         $db = get_db();
         $id = $this->getParam('id');
-        $site = $db->getTable('Site')->find($id);
-        $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
-        $site->save();        
-        if(!file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id)) {
-            mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id, 0755);
+        if($id) {
+            $site = $db->getTable('Site')->find($id);
+            $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
+            $site->save();  
+            if(!file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id)) {
+                mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id, 0755);
+            }
+            $responseArray = array('id' => $id, 'date_approved'=>$site->date_approved);
+            try {            
+                $this->sendApprovalEmail($site);
+            } catch(Exception $e) {
+                _log($e);
+            }
+            $this->_helper->json(json_encode($responseArray));
         }
-        $responseArray = array('id' => $id, 'date_approved'=>$site->date_approved);
-        $this->_helper->json(json_encode($responseArray));
-        $this->sendApprovalEmail($site);
     }
 
     public function sendApprovalEmail($site)

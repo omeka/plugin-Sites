@@ -145,52 +145,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         ";
 
         $db->query($sql);
-
-        //SiteExhibit table
-        $sql = "
-        CREATE TABLE IF NOT EXISTS `$db->SiteContextExhibit` (
-          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `site_id` int(10) unsigned NOT NULL,
-          `orig_id` int(10) unsigned NOT NULL,
-          `url` text NULL,
-          `title` text NULL,
-          `description` text NULL,
-          PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
-        ";
-
-        $db->query($sql);
-
-        $sql = "
-        CREATE TABLE IF NOT EXISTS `$db->SiteContextExhibitSection` (
-          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `site_id` int(10) unsigned NOT NULL,
-          `site_exhibit_id` int(10) unsigned NOT NULL,
-          `orig_id` int(10) unsigned NOT NULL,
-          `url` text NULL,
-          `title` text NULL,
-          `description` text NULL,
-          PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
-        ";
-
-        $db->query($sql);
-
-        $sql = "
-        CREATE TABLE IF NOT EXISTS `$db->SiteContextExhibitSectionPage` (
-          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `site_id` int(10) unsigned NOT NULL,
-          `site_section_id` int(10) unsigned NOT NULL,
-          `orig_id` int(10) unsigned NOT NULL,
-          `url` text NULL,
-          `title` text NULL,
-          `description` text NULL,
-          PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
-        ";
-
-
-        $db->query($sql);
         //SiteItem table
         $sql = "
         CREATE TABLE IF NOT EXISTS `$db->SiteItem` (
@@ -202,19 +156,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
           PRIMARY KEY (`id`)
         ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
         ";
-        $db->query($sql);
-
-        $sql = "
-        CREATE TABLE IF NOT EXISTS `$db->SiteToken` (
-          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `token` text COLLATE utf8_unicode_ci NOT NULL,
-          `site_id` int(10) unsigned NOT NULL,
-          `expiration` int(13) NOT NULL,
-          PRIMARY KEY (`id`),
-          UNIQUE KEY `site_ids` (`site_id`)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-        ";
-
         $db->query($sql);
 
         $sql = "

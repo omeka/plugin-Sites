@@ -7,7 +7,7 @@ echo flash();
 <?php $columns = get_db()->getTable('Site')->getColumns();?>
 
 <?php 
-$columns = array('title', 'content_summary', 'join_reason', 'description');
+$columns = array('title', 'content_summary', 'join_reason', 'description', 'api_key');
 ?>
 
 <form method="post">

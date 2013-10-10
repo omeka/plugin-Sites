@@ -28,11 +28,14 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                 }
                 $errors = false;
                 //dig up the sites that correspond to the keys passed and add or delete
-                foreach($_POST['site_key'] as $key) {           
+                foreach($_POST['site_key'] as $key) {       
+                    if(trim($key) == '') {
+                        continue;
+                    }    
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     if($site) {
                         $site->site_aggregation_id = $record->id;
-                        $site->save(false);                        
+                        $site->save(true);                        
                     } else {
                         $errors = true;
                         $this->_helper->flashMessenger("Key $key is not valid.", 'error');

@@ -10,6 +10,17 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $this->_helper->db->setDefaultModelName('Site');
     }
     
+    public function aggregationAction()
+    {
+        $siteId = $this->getParam('id');
+        $siteId = 13;
+        $site = $this->_helper->db->getTable()->findById($siteId);
+        $aggregation = $site->getSiteAggregation();
+        $sites = $aggregation->getSites();
+        $this->view->site_aggregations = $aggregation;
+        $this->sites = $sites;
+    }
+    
     public function approveAction()
     {
         $db = get_db();

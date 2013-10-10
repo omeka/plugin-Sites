@@ -7,6 +7,7 @@ echo head(array('title'=>$site_aggregation->name));
 <div>
 <?php echo metadata($site_aggregation, 'description'); ?>
 </div>
+
 <ul>
 <?php foreach(loop('sites', $sites) as $site): ?>
 <li><?php echo link_to($site, 'show', metadata($site, 'title')); ?></li>

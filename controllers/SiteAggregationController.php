@@ -35,14 +35,14 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     if($site) {
                         $site->site_aggregation_id = $record->id;
-                        $site->save(true);                        
+                        $site->save(false);                        
                     } else {
                         $errors = true;
                         $this->_helper->flashMessenger("Key $key is not valid.", 'error');
                     }
                 }
 
-                foreach($_POST['site_keys_delete'] as $siteKey) {
+                foreach($_POST['site_keys_delete'] as $key) {
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     $site->site_aggregation_id = null;
                     $site->save(false);
@@ -58,7 +58,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         }
         
         $this->view->$varName = $record;
-        $this->view->form = $this->getForm($record);
+        $this->view->form = $this->getForm($record, true);
         $this->view->sites = $record->getSites();
     }
 
@@ -103,7 +103,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         $this->view->sites = $this->view->site_aggregation->getSites();
     }
 
-    private function getForm($siteAggregation)
+    private function getForm($siteAggregation, $forEdit = false)
     {
         
         //the form requires some direct intervention for the list of
@@ -133,13 +133,24 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         $form .= "</div>";
         $form .= "<div class='inputs five columns omega'>";
         $form .= "<fieldset name='site_keys'>";
+        $form .= "<table><thead><tr>";
+        if($forEdit) {
+            $form .= "<th>Remove</th>";
+        }
+        $form .= "<th>Site</th><th>Key</th>";
+        $form .= "</tr></thead><tbody>";
         foreach($sites as $site) {
-            
-            $form .= "<div class='input-block'>";
-            $form .= "<label>{$site->title}</label>";
+            $form .= "<tr>";
+            if($forEdit) {
+                $form .= "<td><input type='checkbox' name='site_keys_delete[]' value='$site->api_key' /></td>";
+            }
+            $form .= "<td>{$site->title}</td>";
+            $form .= "<td>";
             $form .= $this->view->formText('site_key[]', $site->api_key, array('id'=>null, 'class'=>'site_keys'));
-            $form .= "</div>";
+            $form .= "</td>";
+            $form .= "</tr>";
         }            
+        $form .= "</tbody></table>";
         $form .= "<div class='input-block'>";
         $form .= "<label>New site key</label>";
         $form .= $this->view->formText('site_key[]');

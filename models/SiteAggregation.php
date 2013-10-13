@@ -24,6 +24,14 @@ class SiteAggregation extends Omeka_Record_AbstractRecord
 
     public function getRecordUrl($action = 'show')
     {
-        return url("sites/aggregation/{$this->id}");
+        switch($action) {
+            case 'show':
+                return url("sites/aggregation/{$this->id}");
+                break;
+            case 'edit':
+                return url("sites/site-aggregation/edit/id/{$this->id}");
+                break;
+        }
+        
     }
 }

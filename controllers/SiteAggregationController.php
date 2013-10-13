@@ -42,11 +42,13 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                     }
                 }
 
-                foreach($_POST['site_keys_delete'] as $key) {
-                    $site = $this->_helper->db->getTable('Site')->findByKey($key);
-                    $site->site_aggregation_id = null;
-                    $site->save(false);
-                }                
+                if(isset($_POST['site_keys_delete'])) {
+                    foreach($_POST['site_keys_delete'] as $key) {
+                        $site = $this->_helper->db->getTable('Site')->findByKey($key);
+                        $site->site_aggregation_id = null;
+                        $site->save(false);
+                    }                
+                }
                 if(!$errors) {
                     $this->_redirectAfterEdit($record);
                 }

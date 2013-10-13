@@ -60,15 +60,7 @@ class Site extends Omeka_Record_AbstractRecord
         }
         return false;
     }
-    
-    public function getRecordUrl($action) {
-        if(is_admin_theme()) {
-            return parent::getRecordUrl($action);
-        }
-        $url = url("/sites/display-case/$action/id/" . $this->id);
-        return $url;
-    }
-    
+
     public function getProperty($property)
     {
         switch ($property) {

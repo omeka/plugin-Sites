@@ -289,6 +289,17 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                     )
             )
         );
+        $router->addRoute(
+                'sites-site-aggregation',
+                new Zend_Controller_Router_Route(
+                        'sites/aggregation/:id',
+                        array(
+                                'module'        => 'sites',
+                                'controller'    => 'site-aggregation',
+                                'action'        => 'show',
+                        )
+                )
+        );        
     }
 
     public function hookSiteBrowseSql($args)

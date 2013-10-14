@@ -28,7 +28,7 @@ $columns = array('title', 'content_summary', 'join_reason', 'description', 'api_
         <?php echo $this->formSubmit('submit', __('Save Changes'), array('id'=>'save-changes', 'class'=>'submit big green button')); ?>
         <?php 
             set_theme_base_url('public');
-            $url = url("/sites/display-case/show/id/" . $site->id);
+            $url = record_url($site, 'show');
             revert_theme_base_url();
         ?>
         <a href="<?php echo $url; ?>" class="big blue button" target="_blank"><?php echo __('View Public Page'); ?></a>

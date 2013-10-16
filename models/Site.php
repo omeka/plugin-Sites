@@ -61,6 +61,15 @@ class Site extends Omeka_Record_AbstractRecord
         return false;
     }
 
+    public function getSiteContextCollections($params = array())
+    {
+        if(!isset($params['site_id'])) {
+            $params['site_id'] = $this->id;
+        }
+        
+        return $this->getTable('SiteContext_Collection')->findBy($params);
+    }
+
     public function getProperty($property)
     {
         switch ($property) {

@@ -1,0 +1,8 @@
+.approve {
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.approve input[type=checkbox] {
+    margin: 0px 10px 10px 5px;
+}

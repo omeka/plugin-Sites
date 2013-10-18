@@ -77,6 +77,12 @@ function sites_site_logo($site)
     return '';
 }
 
+function sites_get_site_items($site_id, $limit = 10, $page = null)
+{
+    return get_db()->getTable('SiteItem')->findItemsBy(array('site_id' => $site_id), $limit, $page);
+}
+
+
 function get_random_featured_site()
 {
     return get_db()->getTable('Site')->findRandomFeatured();

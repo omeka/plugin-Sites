@@ -74,7 +74,7 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $db = $this->_helper->db;
         $id = $this->getRequest()->getParam('id');
         $site = $this->_helper->db->getTable('Site')->find($id);
-        $items = $this->_helper->db->getTable('SiteItem')->findItemsBy(array('site_id' => $id), 3);
+        $items = $this->_helper->db->getTable('SiteItem')->findItemsBy(array('site_id' => $id), get_option('per_page_public'));
         $collections = $this->_helper->db->getTable('SiteContext_Collection')->findBy(array('site_id'=>$id));
         $aggregation = $this->_helper->db->getTable('SiteAggregation')->find($site->site_aggregation_id);
     

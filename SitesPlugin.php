@@ -340,6 +340,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $db = get_db();
         
         $site = $db->getTable('SiteItem')->findSiteForItem($item->id);
+        $html = "<div id='site-contexts'>";
+        $html .= "<h$hlevel>Original Context</h$hlevel>";
+        if(!$site) {
+            $html .= __('The original site is no longer part of the Omeka Commons.');
+            $html .= '</div>';
+            return $html;
+        }
         $siteItem = get_db()->getTable('SiteItem')->findByItemId($item->id);
         if(!$siteItem) {
             return;
@@ -347,8 +354,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $has_container = $db->getTable('RecordRelationsProperty')->findByVocabAndPropertyName(SIOC, 'has_container');
         $collections = $this->_findSiteContexts($has_container, 'SiteContext_Collection', $siteItem->id);
         $site_url = $site->url;
-        $html = "<div id='site-contexts'>";
-        $html .= "<h$hlevel>Original Context</h$hlevel>";
         $html .= "<p><a href='{$site_url}'>". $site->title . "</a></p>";
         $html .= "<p>". $site->description . "</p>";
         $nextHlevel = $hlevel +1;

@@ -11,6 +11,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'uninstall',
         'upgrade',
         'site_browse_sql',
+        'items_browse_sql',
         'define_routes',
         'public_theme_header',
         'public_items_show',
@@ -310,6 +311,28 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             $select->where('added IS NULL');
         }
         return $select;
+    }
+    
+    public function hookItemsBrowseSql($args)
+    {
+        $select = $args['select'];
+        $params = $args['params'];
+        $db = get_db();
+        if(!empty($params['site_collection_id'])) {
+            $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
+            $select->join(array('record_relations_relation'=>$db->RecordRelationsRelation),
+                'record_relations_relation.subject_id = site_items.item_id', array()        
+            );
+            $select->where("record_relations_relation.object_id = ?", $params['site_collection_id']);
+            $select->where("record_relations_relation.subject_record_type = 'SiteItem'");
+            $select->where("record_relations_relation.object_record_type = 'SiteContext_Collection'");
+            debug($select);
+        }
+        
+        if(!empty($params['site_id'])) {
+            $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
+            $select->where("site_id = ? ", $params['site_id']);
+        }
     }
 
     private function _findSiteContexts($pred, $objectContextType, $siteItemId)

@@ -21,7 +21,8 @@ echo head(array('title' => $site->title , 'bodyclass' => $bodyclass));
     <ul id='sites-context'> 
     <?php foreach(loop('site_context_collection') as $collection) : ?>
         <li>
-        <?php echo sites_link_to_original_context(); ?>
+        <a href="<?php echo metadata($collection, 'url'); ?>"><?php echo metadata($collection, 'title'); ?></a>
+        
         </li>
     <?php endforeach; ?>
     </ul>

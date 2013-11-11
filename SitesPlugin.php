@@ -326,7 +326,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             $select->where("record_relations_relation.object_id = ?", $params['site_collection_id']);
             $select->where("record_relations_relation.subject_record_type = 'SiteItem'");
             $select->where("record_relations_relation.object_record_type = 'SiteContext_Collection'");
-            debug($select);
         }
         
         if(!empty($params['site_id'])) {

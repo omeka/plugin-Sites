@@ -24,7 +24,6 @@ class Table_SiteItem extends Omeka_Db_Table
         foreach($params as $field=>$value) {
             $select->where("site_items.$field = ?", $value);
         }
-        $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
 
         if ($limit) {
             $this->applyPagination($select, $limit, $page);

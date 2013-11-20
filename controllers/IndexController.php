@@ -10,10 +10,22 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $this->_helper->db->setDefaultModelName('Site');
     }
     
+    public function editAction()
+    {
+        $site = $this->_helper->db->findById();
+        $this->view->site = $site;
+        if(is_null($site->date_approved) && $_POST['approved'] == 1) {
+            $this->approveSite($site, false);
+        }
+        if(!is_null($site->date_approved) && $_POST['approved'] == 0) {
+            $site->date_approved = null;
+            $site->save();
+        }
+    }
+    
     public function aggregationAction()
     {
         $siteId = $this->getParam('id');
-        $siteId = 13;
         $site = $this->_helper->db->getTable()->findById($siteId);
         $aggregation = $site->getSiteAggregation();
         $sites = $aggregation->getSites();
@@ -23,24 +35,15 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
     
     public function approveAction()
     {
-        $db = get_db();
+        $db = $this->_helper->db;
+        //$db = get_db();
         $id = $this->getParam('id');
         if($id) {
             $site = $db->getTable('Site')->find($id);
-            $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
-            $site->save();  
-            if(!file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id)) {
-                mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id, 0755);
-            }
-            $responseArray = array('id' => $id, 'date_approved'=>$site->date_approved);
-            try {            
-                $this->sendApprovalEmail($site);
-            } catch(Exception $e) {
-                _log($e);
-            }
-            $this->_helper->json(json_encode($responseArray));
+            $this->approveSite($site);
         }
     }
+
 
     public function sendApprovalEmail($site)
     {
@@ -97,4 +100,25 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
     {
         $this->_helper->redirector('');
     }
+    
+    
+    protected function approveSite($site, $ajax = true)
+    {
+        $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
+        $site->save();
+        if(!file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id)) {
+            mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id, 0755);
+        }
+        $responseArray = array('id' => $site->id, 'date_approved'=>$site->date_approved);
+        try {
+            $this->sendApprovalEmail($site);
+        } catch(Exception $e) {
+            _log($e);
+        }
+        if($ajax) {
+            $this->_helper->json(json_encode($responseArray));
+        } else {
+            $this->_redirectAfterEdit($record);
+        }    
+    }    
 }

@@ -35,7 +35,7 @@ class Site extends Omeka_Record_AbstractRecord
         $this->_mixins[] = new Mixin_PublicFeatured($this);
     }    
     
-    public function beforeSave()
+    protected function beforeSave()
     {
         if(!is_array($this->commons_settings)) {
             $this->commons_settings = array();
@@ -85,19 +85,4 @@ class Site extends Omeka_Record_AbstractRecord
     {
         return $this->_db->getTable('SiteItem')->count(array('site_id'=>$this->id));
     }
-    
-    /**
-     * overrides parent so that if 'approve' is checked we set the date_approved
-     */
-    protected function filterPostData($post) 
-    {
-        debug('filter');
-        debug(print_r($post, true));
-        if($post['approved']) {
-            debug('approved');
-            $post['date_approved'] = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
-        }
-        return $post;
-    }
-    
 }

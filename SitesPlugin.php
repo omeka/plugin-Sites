@@ -300,6 +300,18 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                                 'action'        => 'show',
                         )
                 )
+        );
+
+        $router->addRoute(
+                'sites-site-approve-route',
+                new Zend_Controller_Router_Route(
+                        'sites/approve',
+                        array(
+                                'module'        => 'sites',
+                                'controller'    => 'index',
+                                'action'        => 'approve',
+                        )
+                )
         );        
     }
 

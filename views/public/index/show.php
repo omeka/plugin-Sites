@@ -30,7 +30,7 @@ echo head(array('title' => $site->title , 'bodyclass' => $bodyclass));
     <?php foreach(loop('site_context_collection') as $collection) : ?>
         <li>
         <a href="<?php echo metadata($collection, 'url'); ?>"><?php echo metadata($collection, 'title'); ?></a>
-        
+        <?php echo link_to_items_browse(__("Browse %s in Omeka Commons", metadata($collection, 'title')), array('site_collection_id'=>$collection->id)); ?>
         </li>
     <?php endforeach; ?>
     </ul>

@@ -329,7 +329,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $select = $args['select'];
         $params = $args['params'];
-        $db = get_db();
+        $db = $this->_db;
         if(!empty($params['site_collection_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
             $select->join(array('record_relations_relation'=>$db->RecordRelationsRelation),

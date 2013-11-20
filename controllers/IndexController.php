@@ -51,16 +51,16 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $from = get_option('administrator_email');
         $subject = "Omeka Commons participation approved!";
         $body = "Thank you for participating in the Omeka Commons. blah blah blah
-        You will need to enter your Omeka Commons API key into the configuration form
-        of the Commons plugin you installed on your Omeka site.
+You will need to enter your Omeka Commons API key into the configuration form
+of the Commons plugin you installed on your Omeka site.
 
-        Copy and paste the API key into the API key input on the form and save the configuration.
-        You will then be able to send individual items and entire collections to be preserved in the Commons.
-        When you do so, some basic information about your items, collections, and exhibits will be
-        available in the commons to help others discover your material and incorporate it into their research
-        and interests.
+Copy and paste the API key into the API key input on the form and save the configuration.
+You will then be able to send individual items and entire collections to be preserved in the Commons.
+When you do so, some basic information about your items, collections, and exhibits will be
+available in the commons to help others discover your material and incorporate it into their research
+and interests.
 
-        ";
+API key: " . $site->api_key;
 
         $mail = new Zend_Mail();
         $mail->setBodyText($body);

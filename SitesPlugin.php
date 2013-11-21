@@ -107,7 +107,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
           `join_reason` text NOT NULL,
           `title` text NULL,
           `description` text NULL,
-          `key` text NULL,
+          `api_key` text NULL,
           `last_import` timestamp NULL DEFAULT NULL,
           `date_approved` timestamp NULL DEFAULT NULL,
           `date_applied` timestamp NULL DEFAULT NULL,
@@ -115,6 +115,8 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
           `author_info` text NULL,
           `commons_settings` text NULL,
           `omeka_version` text NOT NULL,
+          `public` tinyint(1) DEFAULT NULL,
+          `featured` tinyint(1) DEFAULT NULL,          
           PRIMARY KEY (`id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

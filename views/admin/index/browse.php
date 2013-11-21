@@ -11,31 +11,31 @@ echo head($head);
 <div id="primary">
     <div class="pagination"><?php echo pagination_links(); ?></div>
     
-    <ul class="quick-filter-wrapper">
-        <li><a href="#" tabindex="0">Filter Approved</a>
-        <ul class="dropdown">
-            <li><span class="quick-filter-heading">Filter Approved</span></li>
-             <li><a href="<?php echo url('sites'); ?>">All</a></li>
-             <li><a href="<?php echo url('sites?approved=true') ?>">Approved</a></li>
-             <li><a href="<?php echo url('sites?approved=false') ?>">Needs approval</a></li>       
-            </ul>
-        </li>
-    </ul>    
+<form method="post" action="<?php echo url('sites/index/batch-approve'); ?>">
 
-<div id='sites-search' style='clear:both'>
-    
-<form method="get">
+
 Search by:
 <label for='title'>Title</label><input size='10' type='text' name='title'/>
 <label for='affiliation'>Affiliation</label><input size='10' type='text' name='affiliation'/>
 <label for='admin_name'>Admin Name</label><input size='10' type='text' name='admin_name'/>
 <button>Submit</button>
-</form>
-</div>
+
+<ul class="quick-filter-wrapper">
+    <li><a href="#" tabindex="0">Filter Approved</a>
+    <ul class="dropdown">
+        <li><span class="quick-filter-heading">Filter Approved</span></li>
+         <li><a href="<?php echo url('sites'); ?>">All</a></li>
+         <li><a href="<?php echo url('sites?approved=true') ?>">Approved</a></li>
+         <li><a href="<?php echo url('sites?approved=false') ?>">Needs approval</a></li>       
+        </ul>
+    </li>
+</ul>    
+<button id="batch-approve" class="small blue button">Approve</button>
+
     <table>
         <thead>
         <tr>
-        <th class="batch-edit-heading">Approve?</th>
+        <th class="batch-edit-heading"><input type='checkbox' id='check-all' /></th>
         <?php
         $browseHeadings[__('Site')] = 'title';
         $browseHeadings[__('Affiliation')] = 'affiliation';
@@ -53,7 +53,7 @@ Search by:
         <tr>
         <td class="batch-edit-check" scope="row">
             <?php if(!$site->date_approved):?>
-            <input type="checkbox" name="sites[]" value="<?php echo $site->id; ?>" />
+            <input type="checkbox" name="sites[]" class="site-checkbox" value="<?php echo $site->id; ?>" />
             <?php endif;?>
         </td>
         <?php if($site->featured): ?>
@@ -89,6 +89,8 @@ Search by:
         </tbody>
 
     </table>
+
+</form>
+</div>    
     <div class="pagination"><?php echo pagination_links(); ?></div>
-</div>
 <?php echo foot(); ?>

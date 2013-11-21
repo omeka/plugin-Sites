@@ -10,6 +10,15 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $this->_helper->db->setDefaultModelName('Site');
     }
     
+    public function batchApproveAction()
+    {
+        foreach($_POST['sites'] as $siteId) {
+            $site = $this->_helper->db->getTable()->find($siteId);
+            $this->approveSite($site, false);
+        }
+        $this->redirect('sites/index');    
+    }
+    
     public function editAction()
     {
         $site = $this->_helper->db->findById();

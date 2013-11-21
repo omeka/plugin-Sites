@@ -315,6 +315,17 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                         )
                 )
         );        
+        $router->addRoute(
+                'sites-batch-approve-route',
+                new Zend_Controller_Router_Route(
+                        'sites/index/batch-approve',
+                        array(
+                                'module'        => 'sites',
+                                'controller'    => 'index',
+                                'action'        => 'batch-approve',
+                        )
+                )
+        );        
     }
 
     public function hookSiteBrowseSql($args)

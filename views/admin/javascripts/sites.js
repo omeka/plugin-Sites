@@ -14,9 +14,42 @@ var Sites = {
 		jQuery(Sites.element).replaceWith(response.date_approved);
 		jQuery("input[value = '" + response.id + "']").remove();
 	},
+	
+	setUpBatchApprove: function() {
+	    var approveButton = jQuery('#batch-approve');
+	    var globalCheckbox = jQuery('#check-all');
+	    var siteCheckboxes = jQuery('.site-checkbox');
+	    
+	    approveButton.prop('disabled', true);
+	    
+        globalCheckbox.change(function() {
+            siteCheckboxes.prop('checked', !!this.checked);
+            checkBatchApproveButton();
+        });	    
+	    
+        siteCheckboxes.change(function(){
+            if (!this.checked) {
+                globalCheckbox.prop('checked', false);
+            }
+            checkBatchApproveButton();
+        });       
+        
+        function checkBatchApproveButton() {
+            var checked = false;
+            siteCheckboxes.each(function() {
+                if (this.checked) {
+                    checked = true;
+                    return false;
+                }
+            });
 
+            approveButton.prop('disabled', !checked);
+        }        
+	    
+	}
 };
 
 jQuery(document).ready(function() {
 	jQuery('.approve').click(Sites.approve);	
+	Sites.setUpBatchApprove();
 }); 

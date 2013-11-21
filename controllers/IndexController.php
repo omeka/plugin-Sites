@@ -14,12 +14,17 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
     {
         $site = $this->_helper->db->findById();
         $this->view->site = $site;
-        if(is_null($site->date_approved) && $_POST['approved'] == 1) {
-            $this->approveSite($site, false);
-        }
-        if(!is_null($site->date_approved) && $_POST['approved'] == 0) {
-            $site->date_approved = null;
+        
+        if(!empty($_POST)) {
+            $site->featured = $_POST['featured'];
+            if(is_null($site->date_approved) && $_POST['approved'] == 1) {
+                $this->approveSite($site, false);
+            }
+            if(!is_null($site->date_approved) && $_POST['approved'] == 0) {
+                $site->date_approved = null;
+            }
             $site->save();
+            $this->_redirectAfterEdit($site);
         }
     }
     
@@ -118,7 +123,7 @@ API key: " . $site->api_key;
         if($ajax) {
             $this->_helper->json(json_encode($responseArray));
         } else {
-            $this->_redirectAfterEdit($record);
+            $this->_redirectAfterEdit($site);
         }    
     }    
 }

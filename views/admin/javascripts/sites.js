@@ -8,9 +8,11 @@ var Sites = {
 	
 	},
 	
-	approveResponseHandler: function(response, a, b) {
+	approveResponseHandler: function(response, status, jqXHR) {
 		response = JSON.parse(response);
+		console.log(response);
 		jQuery(Sites.element).replaceWith(response.date_approved);
+		jQuery("input[value = '" + response.id + "']").remove();
 	},
 
 };

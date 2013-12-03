@@ -15,13 +15,15 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'define_routes',
         'public_theme_header',
         'public_items_show',
+        'public_items_search',
         'admin_items_show_sidebar',
         'after_insert_user', // a little inappropriate since it isn't relevant to this plugin, but just a cheap shortcut since it shouldn't go in Groups as a general use plugin feature
         'embed_codes_browse_each'
     );
     
     protected $_filters = array(
-        'admin_navigation_main'
+        'admin_navigation_main',
+        'search_record_types'
     );
     
     public function setUp()
@@ -60,6 +62,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         echo $html;
     }
     
+    public function hookPublicItemsSearch($args)
+    {
+        $view = $args['view'];
+        echo $view->partial('advanced-search-partial.php', array('searchFormId'=>'advanced-search-form', 'searchButtonId'=>'submit_search_advanced'));
+    }
+    
     public function hookAdminItemsShowSidebar($args)
     {
         $contentHtml = $this->_siteContextsHtml($args, array('h-level'=>4));
@@ -77,7 +85,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $site = $this->_db->getTable('SiteItem')->findSiteForItem($item);
         if($site) {
             $html = "<li>";
-            $html .= "Site: " . $site->title;
+            $html .= __("Site: ") . $site->title;
             $html .= "</li>";
             echo $html;            
         }
@@ -87,6 +95,11 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $navArray['Sites'] = array('label'=>'Sites', 'uri'=>url('sites/index') );
         return $navArray;
+    }
+    
+    public function filterSearchRecordTypes($searchableRecordTypes) {
+        $searchableRecordTypes['Site'] = __('Site');
+        return $searchableRecordTypes;
     }
 
     public function hookInstall()
@@ -355,6 +368,8 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         
         if(!empty($params['site_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
+            $select->join(array('sites' => $db->Site), 'sites.id = site_items.site_id', array());
+            $select->where('sites.title LIKE ?', $params['site_title']);
             $select->where("site_id = ? ", $params['site_id']);
         }
     }
@@ -388,7 +403,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         
         $site = $db->getTable('SiteItem')->findSiteForItem($item->id);
         $html = "<div id='site-contexts'>";
-        $html .= "<h$hlevel>Original Context</h$hlevel>";
+        $html .= "<h$hlevel>" . __('Original Context') . "</h$hlevel>";
         if(!$site) {
             $html .= __('The original site is no longer part of the Omeka Commons.');
             $html .= '</div>';

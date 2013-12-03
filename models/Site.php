@@ -46,6 +46,7 @@ class Site extends Omeka_Record_AbstractRecord
     protected function afterSave($args)
     {
         $this->setSearchTextTitle($this->title);
+        $this->addSearchText($this->title);
         $this->addSearchText($this->description);
         $this->addSearchText($this->content_summary);
         if(!is_null($this->date_approved) && !file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $this->id)) {
@@ -85,4 +86,9 @@ class Site extends Omeka_Record_AbstractRecord
     {
         return $this->_db->getTable('SiteItem')->count(array('site_id'=>$this->id));
     }
+
+    public function getRecordUrl($action = 'show') {
+        return public_url("sites/$action/{$this->id}");
+    }
+
 }

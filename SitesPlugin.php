@@ -368,9 +368,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         
         if(!empty($params['site_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
+            $select->where("site_id = ? ", $params['site_id']);
+        }
+
+        if(!empty($params['site_title'])) {
             $select->join(array('sites' => $db->Site), 'sites.id = site_items.site_id', array());
             $select->where('sites.title LIKE ?', $params['site_title']);
-            $select->where("site_id = ? ", $params['site_id']);
         }
     }
 

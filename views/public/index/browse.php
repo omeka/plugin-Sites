@@ -1,7 +1,9 @@
 <?php
-echo head(array('title' => __('Browse sites') , 'bodyclass' => 'sites browse')); 
+echo head(array('title' => __('Sites') , 'bodyclass' => 'sites browse')); 
 ?>
 <div id="primary">
+
+<h1><?php echo __('Sites'); ?> <?php echo __('(%s total)', total_records('sites')); ?></h1>
 
 <?php foreach(loop('site') as $site) : ?>
     <div class='sites-site'>

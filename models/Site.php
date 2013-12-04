@@ -33,8 +33,8 @@ class Site extends Omeka_Record_AbstractRecord
         $this->_mixins[] = new Mixin_Owner($this);
         $this->_mixins[] = new Mixin_Search($this);
         $this->_mixins[] = new Mixin_PublicFeatured($this);
-    }    
-    
+    }
+
     protected function beforeSave()
     {
         if(!is_array($this->commons_settings)) {
@@ -52,8 +52,8 @@ class Site extends Omeka_Record_AbstractRecord
         if(!is_null($this->date_approved) && !file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $this->id)) {
             mkdir(SITES_PLUGIN_DIR . '/views/shared/images/' . $this->id, 0755);
         }
-    }    
-    
+    }
+
     public function getSiteAggregation()
     {
         if($this->site_aggregation_id) {
@@ -67,7 +67,7 @@ class Site extends Omeka_Record_AbstractRecord
         if(!isset($params['site_id'])) {
             $params['site_id'] = $this->id;
         }
-        
+
         return $this->getTable('SiteContext_Collection')->findBy($params);
     }
 
@@ -75,20 +75,15 @@ class Site extends Omeka_Record_AbstractRecord
     {
         switch ($property) {
             case 'total_items':
-                return $this->totalItems();    
+                return $this->totalItems();
             break;
-                
+
         }
         return parent::getProperty($property);
     }
-    
+
     public function totalItems()
     {
         return $this->_db->getTable('SiteItem')->count(array('site_id'=>$this->id));
     }
-
-    public function getRecordUrl($action = 'show') {
-        return public_url("sites/$action/{$this->id}");
-    }
-
 }

@@ -425,6 +425,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             $html .= "<h$nextHlevel>Collection(s)</h$nextHlevel>";
             foreach($collections as $collection) {
                 $html .= "<p><a href='" . $collection->url . "'>" . $collection->title . "</a>: ";
+                $html .= link_to_items_browse(__("Browse %s in Omeka Commons", metadata($collection, 'title')), array('site_collection_id'=>$collection->id));
                 $html .= snippet($collection->description, 0, 100) . "</p>";
             }
         }

@@ -20,12 +20,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'after_insert_user', // a little inappropriate since it isn't relevant to this plugin, but just a cheap shortcut since it shouldn't go in Groups as a general use plugin feature
         'embed_codes_browse_each'
     );
-    
+
     protected $_filters = array(
         'admin_navigation_main',
         'search_record_types'
     );
-    
+
     public function setUp()
     {
         parent::setUp();
@@ -34,21 +34,21 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         //require_once(SITES_PLUGIN_DIR . '/models/SiteContext/Table/ExhibitSection.php');
         //require_once(SITES_PLUGIN_DIR . '/models/SiteContext/Table/ExhibitSectionPage.php');
     }
-    
+
     /*
      * For Commons, each new user gets a new gruop
      */
-    
+
     public function hookAfterInsertUser($args)
     {
         $user = $args['record'];
-        $group = new Group();        
+        $group = new Group();
         $group->visibility = 'closed';
         $group->title = $user->name . "'s Group";
-        $group->save();        
+        $group->save();
         $group->addMember($user, 0, 'is_owner');
     }
-    
+
     public function hookPublicThemeHeader()
     {
         queue_css('sites');
@@ -61,13 +61,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $html .= $this->_siteInfoHtml($args);
         echo $html;
     }
-    
+
     public function hookPublicItemsSearch($args)
     {
         $view = $args['view'];
         echo $view->partial('advanced-search-partial.php', array('searchFormId'=>'advanced-search-form', 'searchButtonId'=>'submit_search_advanced'));
     }
-    
+
     public function hookAdminItemsShowSidebar($args)
     {
         $contentHtml = $this->_siteContextsHtml($args, array('h-level'=>4));
@@ -75,10 +75,10 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         if(!empty($contentHtml)) {
             $html = '<div class="panel">';
             $html .= '</div>';
-            echo $html;            
+            echo $html;
         }
     }
-    
+
     public function hookEmbedCodesBrowseEach($args)
     {
         $item = $args['item'];
@@ -87,16 +87,16 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             $html = "<li>";
             $html .= __("Site: ") . $site->title;
             $html .= "</li>";
-            echo $html;            
+            echo $html;
         }
     }
-    
+
     public function filterAdminNavigationMain($navArray)
     {
         $navArray['Sites'] = array('label'=>'Sites', 'uri'=>url('sites/index') );
         return $navArray;
     }
-    
+
     public function filterSearchRecordTypes($searchableRecordTypes) {
         $searchableRecordTypes['Site'] = __('Site');
         return $searchableRecordTypes;
@@ -129,7 +129,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
           `commons_settings` text NULL,
           `omeka_version` text NOT NULL,
           `public` tinyint(1) DEFAULT NULL,
-          `featured` tinyint(1) DEFAULT NULL,          
+          `featured` tinyint(1) DEFAULT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -144,9 +144,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
         ";
-        
-        $db->query($sql);        
-        
+
+        $db->query($sql);
+
         //SiteCollection table
         $sql = "
         CREATE TABLE IF NOT EXISTS `$db->SiteContextCollection` (
@@ -180,11 +180,11 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
           `name` text NULL,
           `description` text NULL,
           PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;        
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         ";
-        
+
         $db->query($sql);
-        
+
         $prop = get_db()->getTable('RecordRelationsProperty')->findByVocabAndPropertyName(SIOC, 'has_container');
         if(empty($prop)) {
             $propData = array(
@@ -275,13 +275,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
         //blocks_unregister_blocks(array('CommonsOriginalInfoBlock', 'CommonsSiteInfoBlock' ));
     }
-    
+
     public function hookUpgrade($args)
     {
         $old = $args['old_version'];
         $new = $args['new_version'];
         $db = get_db();
-        
+
         if($new == '1.2') {
             $sql = "
             ALTER TABLE `$db->Site` ADD `public` BOOLEAN NULL,
@@ -327,7 +327,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                                 'action'        => 'approve',
                         )
                 )
-        );        
+        );
         $router->addRoute(
                 'sites-batch-approve-route',
                 new Zend_Controller_Router_Route(
@@ -338,7 +338,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                                 'action'        => 'batch-approve',
                         )
                 )
-        );        
+        );
     }
 
     public function hookSiteBrowseSql($args)
@@ -350,7 +350,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         }
         return $select;
     }
-    
+
     public function hookItemsBrowseSql($args)
     {
         $select = $args['select'];
@@ -359,13 +359,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         if(!empty($params['site_collection_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
             $select->join(array('record_relations_relation'=>$db->RecordRelationsRelation),
-                'record_relations_relation.subject_id = site_items.item_id', array()        
+                'record_relations_relation.subject_id = site_items.id', array()
             );
             $select->where("record_relations_relation.object_id = ?", $params['site_collection_id']);
             $select->where("record_relations_relation.subject_record_type = 'SiteItem'");
             $select->where("record_relations_relation.object_record_type = 'SiteContext_Collection'");
         }
-        
+
         if(!empty($params['site_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
             $select->where("site_id = ? ", $params['site_id']);
@@ -379,7 +379,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
     private function _findSiteContexts($pred, $objectContextType, $siteItemId)
     {
         $db = get_db();
-    
+
         $relParams = array(
                 'subject_id' => $siteItemId,
                 'subject_record_type' => 'SiteItem',
@@ -387,9 +387,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                 'object_record_type' => $objectContextType,
                 'public' => true
         );
-    
+
         return $db->getTable('RecordRelationsRelation')->findObjectRecordsByParams($relParams);
-    }    
+    }
 
     private function _siteContextsHtml($args, $options=array())
     {
@@ -398,11 +398,11 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         } else {
             $hlevel = 2;
         }
-                
-        
+
+
         $item = $args['item'];
         $db = get_db();
-        
+
         $site = $db->getTable('SiteItem')->findSiteForItem($item->id);
         $html = "<div id='site-contexts'>";
         $html .= "<h$hlevel>" . __('Original Context') . "</h$hlevel>";
@@ -430,9 +430,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         }
         $html .= "<p><a href='{$siteItem->url}'>View Original</a>";
         $html .= "</div>";
-        return $html;        
+        return $html;
     }
-    
+
     private function _siteInfoHtml($args, $options=array())
     {
         if(isset($options['h-level'])) {
@@ -440,13 +440,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         } else {
             $hlevel = 2;
         }
-        
+
         $item = $args['item'];
         $db = get_db();
-        $site = $db->getTable('SiteItem')->findSiteForItem($item->id);    
+        $site = $db->getTable('SiteItem')->findSiteForItem($item->id);
         if(!$site) {
             return;
-        }    
+        }
         $html = "<div id='site-info'>";
         $html .= "<h$hlevel>Explore in Omeka Commons</h$hlevel>";
         $html .= "<p>From " . link_to($site, 'show', $site->title) . "</p>";

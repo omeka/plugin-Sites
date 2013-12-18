@@ -6,27 +6,6 @@ echo flash();
 ?>
 <?php $columns = get_db()->getTable('Site')->getColumns();?>
 
-<?php
-//$columns = array('title', 'content_summary', 'join_reason', 'description', 'api_key');
-?>
-
-<?php
-
-$role = current_user();
-if($site->isOwnedBy($role)) {
-    echo 'owner';
-}
-
-$acl = get_acl();
-
-if($acl->isAllowed($role, 'Sites_Index', 'edit')) {
-    echo 'allowed';
-} else {
-    echo 'denied';
-}
-
-?>
-
 <form method="post">
 <section class="seven columns alpha">
 <?php echo sites_site_logo($site); ?>

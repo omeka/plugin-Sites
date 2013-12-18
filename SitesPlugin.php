@@ -1,5 +1,20 @@
 <?php
 
+class SitesAssertOwnership implements Zend_Acl_Assert_Interface
+{
+    public function assert(Zend_Acl $acl,
+            Zend_Acl_Role_Interface $role = null,
+            Zend_Acl_Resource_Interface $resource = null,
+            $privilege = null)
+    {
+
+
+
+
+    }
+
+}
+
 define('SITES_PLUGIN_DIR', dirname(__FILE__));
 require_once(SITES_PLUGIN_DIR . '/helpers/functions.php');
 require_once(SITES_PLUGIN_DIR . '/helpers/ContextFunctions.php');
@@ -13,6 +28,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'site_browse_sql',
         'items_browse_sql',
         'define_routes',
+        'define_acl',
         'public_theme_header',
         'public_items_show',
         'public_items_search',
@@ -54,6 +70,31 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         queue_css('sites');
     }
 
+    public function hookDefineAcl($args)
+    {
+        $acl = $args['acl'];
+        $acl->addResource('Sites_Index');
+        $acl->addResource('Sites_Aggregation');
+        $acl->addRole(new Zend_Acl_Role('site-admin'), null);
+        $resources = array('Items', 'Collections', 'ElementSets', 'Files', 'Plugins',
+                'Settings', 'Security', 'Upgrade', 'Tags', 'Themes',
+                'SystemInfo', 'ItemTypes', 'Users', 'Search', 'Appearance',
+                'Elements');
+        $acl->deny('site-admin', $resources);
+
+
+        $acl->allow(null,
+                'Sites_Index',
+                array('edit'),
+                new Omeka_Acl_Assert_Ownership
+        );
+
+        $acl->allow('site-admin',
+                'Sites_Index',
+                array('editSelf', 'browse', 'index')
+        );
+    }
+
     public function hookPublicItemsShow($args)
     {
         $html = '';
@@ -93,7 +134,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterAdminNavigationMain($navArray)
     {
+        $user = current_user();
+        if($user->role == 'site-admin') {
+            $navArray = array();
+        }
         $navArray['Sites'] = array('label'=>'Sites', 'uri'=>url('sites/index') );
+        $navArray['SiteAggregations'] = array('label'=>'Site Aggregations', 'uri'=>url('sites/site-aggregation/'));
         return $navArray;
     }
 

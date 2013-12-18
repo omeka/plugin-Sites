@@ -2,20 +2,20 @@
 
 class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionController
 {
-    
+
     public function init()
     {
         $this->_helper->db->setDefaultModelName('SiteAggregation');
-    }    
+    }
     public function browseAction() {}
 
     //@TODO: only allow permission to add and edit if the current user owns a site
     public function editAction()
     {
         $varName = $this->view->singularize($this->_helper->db->getDefaultModelName());
-        
+
         $record = $this->_helper->db->findById();
-                
+
         // Check if the form was submitted.
         if ($this->getRequest()->isPost()) {
             // Set the POST data to the record.
@@ -28,14 +28,14 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                 }
                 $errors = false;
                 //dig up the sites that correspond to the keys passed and add or delete
-                foreach($_POST['site_key'] as $key) {       
+                foreach($_POST['site_key'] as $key) {
                     if(trim($key) == '') {
                         continue;
-                    }    
+                    }
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     if($site) {
                         $site->site_aggregation_id = $record->id;
-                        $site->save(false);                        
+                        $site->save(false);
                     } else {
                         $errors = true;
                         $this->_helper->flashMessenger("Key $key is not valid.", 'error');
@@ -47,18 +47,18 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                         $site = $this->_helper->db->getTable('Site')->findByKey($key);
                         $site->site_aggregation_id = null;
                         $site->save(false);
-                    }                
+                    }
                 }
                 if(!$errors) {
                     $this->_redirectAfterEdit($record);
                 }
-                
+
             // Flash an error if the record does not validate.
             } else {
                 $this->_helper->flashMessenger($record->getErrors());
             }
         }
-        
+
         $this->view->$varName = $record;
         $this->view->form = $this->getForm($record, true);
         $this->view->sites = $record->getSites();
@@ -68,7 +68,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
     {
         $class = $this->_helper->db->getDefaultModelName();
         $varName = $this->view->singularize($class);
-        
+
         $record = new $class();
         if ($this->getRequest()->isPost()) {
             $record->setPostData($_POST);
@@ -77,13 +77,13 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                 if ($successMessage != '') {
                     $this->_helper->flashMessenger($successMessage, 'success');
                 }
-                
+
                 //dig up the sites that correspond to the keys passed
                 foreach($_POST['site_keys'] as $siteKey) {
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     if($site) {
                         $site->site_aggregation_id = $record->id;
-                        $site->save(false);                        
+                        $site->save(false);
                     } else {
                         $this->_helper->flashMessenger("Key $key is not valid.", 'error');
                     }
@@ -95,11 +95,11 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         }
         $this->view->$varName = $record;
         $this->view->form = $this->getForm($record);
-    }    
-    
+    }
+
     public function indexAction() {}
-    
-    public function showAction() 
+
+    public function showAction()
     {
         parent::showAction();
         $this->view->sites = $this->view->site_aggregation->getSites();
@@ -107,7 +107,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
 
     private function getForm($siteAggregation, $forEdit = false)
     {
-        
+
         //the form requires some direct intervention for the list of
         //site keys, so we can't use Omeka_Form_Admin
         $form = "<form method='post' action='' type=''>";
@@ -127,7 +127,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         $form .= "<div class='input-block'>";
         $form .= $this->view->formTextarea('description', $siteAggregation->description, array('rows'=>10));
         $form .= "</div></div></div>";
-        
+
         $sites = $siteAggregation->getSites();
         $form .= "<div class='field'>";
         $form .= "<div class='two columns alpha'>";
@@ -151,7 +151,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
             $form .= $this->view->formText('site_key[]', $site->api_key, array('id'=>null, 'class'=>'site_keys'));
             $form .= "</td>";
             $form .= "</tr>";
-        }            
+        }
         $form .= "</tbody></table>";
         $form .= "<div class='input-block'>";
         $form .= "<label>New site key</label>";
@@ -161,9 +161,9 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         $form .= "<p id='add_site_key'>Add another site key</p>";
         $form .= "<button>Submit</button>";
         $form .= "</div></div>";
-        
+
         $form .= "</form>";
         return $form;
     }
-    
+
 }

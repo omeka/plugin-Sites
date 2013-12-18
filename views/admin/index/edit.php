@@ -6,8 +6,25 @@ echo flash();
 ?>
 <?php $columns = get_db()->getTable('Site')->getColumns();?>
 
-<?php 
+<?php
 //$columns = array('title', 'content_summary', 'join_reason', 'description', 'api_key');
+?>
+
+<?php
+
+$role = current_user();
+if($site->isOwnedBy($role)) {
+    echo 'owner';
+}
+
+$acl = get_acl();
+
+if($acl->isAllowed($role, 'Sites_Index', 'edit')) {
+    echo 'allowed';
+} else {
+    echo 'denied';
+}
+
 ?>
 
 <form method="post">
@@ -26,7 +43,7 @@ echo flash();
 <section class="three columns omega">
     <div id="save" class="panel">
         <?php echo $this->formSubmit('submit', __('Save Changes'), array('id'=>'save-changes', 'class'=>'submit big green button')); ?>
-        <?php 
+        <?php
             set_theme_base_url('public');
             $url = record_url($site, 'show');
             revert_theme_base_url();
@@ -34,18 +51,18 @@ echo flash();
         <a href="<?php echo $url; ?>" class="big blue button" target="_blank"><?php echo __('View Public Page'); ?></a>
         <div id="public-featured">
             <div class="featured">
-                <label for="featured"><?php echo __('Featured'); ?>:</label> 
+                <label for="featured"><?php echo __('Featured'); ?>:</label>
                 <?php echo $this->formCheckbox('featured', $site->featured, array(), array('1', '0')); ?>
             </div>
         </div>
         <div class="approve">
-            
+
             <label for="approve"><?php echo __('Approve'); ?>:</label>
             <?php echo $this->formCheckbox('approved', !is_null($site->date_approved), array(), array('1', '0')); ?>
             <?php if(!is_null($site->date_approved)): ?>
             <p>Approved: <?php echo metadata($site, 'date_approved');?></p>
             <?php endif;?>
-        </div>                        
+        </div>
     </div>
 </section>
 </form>

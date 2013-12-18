@@ -1,6 +1,6 @@
 <?php
 
-class Site extends Omeka_Record_AbstractRecord
+class Site extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
     public $id;
     public $site_aggregation_id;
@@ -85,5 +85,10 @@ class Site extends Omeka_Record_AbstractRecord
     public function totalItems()
     {
         return $this->_db->getTable('SiteItem')->count(array('site_id'=>$this->id));
+    }
+
+    public function getResourceId()
+    {
+        return 'Sites_Index';
     }
 }

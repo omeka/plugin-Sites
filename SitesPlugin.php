@@ -1,20 +1,5 @@
 <?php
 
-class SitesAssertOwnership implements Zend_Acl_Assert_Interface
-{
-    public function assert(Zend_Acl $acl,
-            Zend_Acl_Role_Interface $role = null,
-            Zend_Acl_Resource_Interface $resource = null,
-            $privilege = null)
-    {
-
-
-
-
-    }
-
-}
-
 define('SITES_PLUGIN_DIR', dirname(__FILE__));
 require_once(SITES_PLUGIN_DIR . '/helpers/functions.php');
 require_once(SITES_PLUGIN_DIR . '/helpers/ContextFunctions.php');
@@ -84,14 +69,14 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
 
         $acl->allow(null,
-                'Sites_Index',
+                array('Sites_Index', 'Sites_Aggregation'),
                 array('edit'),
                 new Omeka_Acl_Assert_Ownership
         );
 
         $acl->allow('site-admin',
-                'Sites_Index',
-                array('editSelf', 'browse', 'index')
+                array('Sites_Index', 'Sites_Aggregation'),
+                array('editSelf', 'browse', 'index', 'add')
         );
     }
 

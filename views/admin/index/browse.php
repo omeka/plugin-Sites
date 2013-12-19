@@ -63,10 +63,6 @@ Search by:
         <td>
         <?php endif; ?>
             <span class='title'><a href="<?php echo record_url($site, 'edit'); ?>"><?php echo metadata($site, 'title') ?></a></span>
-            <?php $action = $site->site_aggregation_id ? 'edit' : 'add' ;?>
-            <ul class='action-links group'>
-            <li><a href="<?php echo url("/sites/site-aggregation/$action/id/" . $site->site_aggregation_id); ?>">Aggregation</a></li>
-            </ul>
 
         </td>
         <td><?php echo $site->affiliation; ?></td>

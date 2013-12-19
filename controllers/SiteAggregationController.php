@@ -99,6 +99,8 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
     public function showAction()
     {
         parent::showAction();
+        $id = $this->getParam('id');
+        $this->view->items = $this->_helper->db->getTable('SiteAggregation')->findItemsForSiteAggregation($id);
         $this->view->sites = $this->view->site_aggregation->getSites();
     }
 

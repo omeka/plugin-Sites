@@ -4,26 +4,26 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
 {
 
     protected $_browseRecordsPerPage = 10;
-    
+
     public function init()
     {
         $this->_helper->db->setDefaultModelName('Site');
     }
-    
+
     public function batchApproveAction()
     {
         foreach($_POST['sites'] as $siteId) {
             $site = $this->_helper->db->getTable()->find($siteId);
             $this->approveSite($site, false);
         }
-        $this->redirect('sites/index');    
+        $this->redirect('sites/index');
     }
-    
+
     public function editAction()
     {
         $site = $this->_helper->db->findById();
         $this->view->site = $site;
-        
+
         if(!empty($_POST)) {
             $site->featured = $_POST['featured'];
             if(is_null($site->date_approved) && $_POST['approved'] == 1) {
@@ -36,7 +36,7 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
             $this->_redirectAfterEdit($site);
         }
     }
-    
+
     public function aggregationAction()
     {
         $siteId = $this->getParam('id');
@@ -46,7 +46,7 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
         $this->view->site_aggregations = $aggregation;
         $this->sites = $sites;
     }
-    
+
     public function approveAction()
     {
         $db = $this->_helper->db;
@@ -85,7 +85,6 @@ API key: " . $site->api_key;
         $mail->send();
     }
 
-    
     public function showAction()
     {
         $db = $this->_helper->db;
@@ -94,28 +93,24 @@ API key: " . $site->api_key;
         $items = $this->_helper->db->getTable('SiteItem')->findItemsBy(array('site_id' => $id), get_option('per_page_public'));
         $collections = $this->_helper->db->getTable('SiteContext_Collection')->findBy(array('site_id'=>$id));
         $aggregation = $this->_helper->db->getTable('SiteAggregation')->find($site->site_aggregation_id);
-    
-    
         $params = array(
                 'subject_record_type'=>'Site',
                 'subject_id' => $site->id,
                 'object_record_type' => 'Tag'
         );
-    
         $tags = $this->_helper->db->getTable('RecordRelationsRelation')->findObjectRecordsByParams($params);
         $this->view->site = $site;
         $this->view->items = $items;
         $this->view->site_context_collections = $collections;
         $this->view->tags = $tags;
         $this->view->aggregation = $aggregation;
-    }    
-    
+    }
+
     protected function _redirectAfterEdit($site)
     {
         $this->_helper->redirector('');
     }
-    
-    
+
     protected function approveSite($site, $ajax = true)
     {
         $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
@@ -125,6 +120,11 @@ API key: " . $site->api_key;
         }
         $responseArray = array('id' => $site->id, 'date_approved'=>$site->date_approved);
         try {
+            $owner = $site->getOwner();
+            $owner->active = 1;
+            $owner->save();
+            $activation = UsersActivations::factory($owner);
+            $activation->save();
             $this->sendApprovalEmail($site);
         } catch(Exception $e) {
             _log($e);
@@ -133,6 +133,6 @@ API key: " . $site->api_key;
             $this->_helper->json(json_encode($responseArray));
         } else {
             $this->_redirectAfterEdit($site);
-        }    
-    }    
+        }
+    }
 }

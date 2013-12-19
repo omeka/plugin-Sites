@@ -18,7 +18,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         'public_items_show',
         'public_items_search',
         'admin_items_show_sidebar',
-        'after_insert_user', // a little inappropriate since it isn't relevant to this plugin, but just a cheap shortcut since it shouldn't go in Groups as a general use plugin feature
+        'after_save_user', // a little inappropriate since it isn't relevant to this plugin, but just a cheap shortcut since it shouldn't go in Groups as a general use plugin feature
         'embed_codes_browse_each'
     );
 
@@ -40,14 +40,16 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
      * For Commons, each new user gets a new gruop
      */
 
-    public function hookAfterInsertUser($args)
+    public function hookAfterSaveUser($args)
     {
         $user = $args['record'];
-        $group = new Group();
-        $group->visibility = 'closed';
-        $group->title = $user->name . "'s Group";
-        $group->save();
-        $group->addMember($user, 0, 'is_owner');
+        if($args['insert']) {
+            $group = new Group();
+            $group->visibility = 'closed';
+            $group->title = $user->name . "'s Group";
+            $group->save();
+            $group->addMember($user, 0, 'is_owner');
+        }
     }
 
     public function hookPublicThemeHeader()

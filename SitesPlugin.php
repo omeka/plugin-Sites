@@ -61,12 +61,13 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->addResource('Sites_Index');
         $acl->addResource('Sites_Aggregation');
         $acl->addRole(new Zend_Acl_Role('site-admin'), null);
-        $resources = array('Items', 'Collections', 'ElementSets', 'Files', 'Plugins',
-                'Settings', 'Security', 'Upgrade', 'Tags', 'Themes',
-                'SystemInfo', 'ItemTypes', 'Users', 'Search', 'Appearance',
-                'Elements');
-        $acl->deny('site-admin', $resources);
 
+        $acl->deny('site-admin', 'Items', array('delete-confirm', 'delete'));
+
+        $acl->allow('site-admin',
+                    'Items',
+                    array( 'editSelf', 'showSelf', 'show', 'browse', 'index')
+                );
 
         $acl->allow(null,
                 array('Sites_Index', 'Sites_Aggregation'),
@@ -78,6 +79,11 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                 array('Sites_Index', 'Sites_Aggregation'),
                 array('editSelf', 'browse', 'index', 'add')
         );
+        $resources = array('Collections', 'ElementSets', 'Files', 'Plugins',
+                'Settings', 'Security', 'Upgrade', 'Tags', 'Themes',
+                'SystemInfo', 'ItemTypes', 'Users', 'Search', 'Appearance',
+                'Elements');
+        $acl->deny('site-admin', $resources);
     }
 
     public function hookPublicItemsShow($args)
@@ -123,6 +129,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         if($user->role == 'site-admin') {
             $navArray = array();
         }
+        $navArray['Items'] = array('label'=>'Items', 'uri'=>url('items') );
         $navArray['Sites'] = array('label'=>'Sites', 'uri'=>url('sites/index') );
         $navArray['SiteAggregations'] = array('label'=>'Site Aggregations', 'uri'=>url('sites/site-aggregation/'));
         return $navArray;
@@ -349,6 +356,18 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         );
 
         $router->addRoute(
+                'sites-site-aggregation',
+                new Zend_Controller_Router_Route(
+                        'sites/site-aggregation/add',
+                        array(
+                                'module'        => 'sites',
+                                'controller'    => 'site-aggregation',
+                                'action'        => 'add',
+                        )
+                )
+        );
+
+        $router->addRoute(
                 'sites-site-approve-route',
                 new Zend_Controller_Router_Route(
                         'sites/approve',
@@ -387,6 +406,12 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $select = $args['select'];
         $params = $args['params'];
         $db = $this->_db;
+
+        if(is_admin_theme()) {
+            $user = current_user();
+            $select->where('owner_id = ?', $user->id);
+        }
+
         if(!empty($params['site_collection_id'])) {
             $select->join(array('site_items'=>$db->SiteItem), 'site_items.item_id = items.id', array());
             $select->join(array('record_relations_relation'=>$db->RecordRelationsRelation),

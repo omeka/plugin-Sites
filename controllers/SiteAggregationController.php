@@ -7,7 +7,6 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
     {
         $this->_helper->db->setDefaultModelName('SiteAggregation');
     }
-    public function browseAction() {}
 
     //@TODO: only allow permission to add and edit if the current user owns a site
     public function editAction()
@@ -96,8 +95,6 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
         $this->view->$varName = $record;
         $this->view->form = $this->getForm($record);
     }
-
-    public function indexAction() {}
 
     public function showAction()
     {

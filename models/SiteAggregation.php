@@ -31,14 +31,7 @@ class SiteAggregation extends Omeka_Record_AbstractRecord implements Zend_Acl_Re
 
     public function getRecordUrl($action = 'show')
     {
-        switch($action) {
-            case 'show':
-                return url("sites/aggregation/{$this->id}");
-                break;
-            case 'edit':
-                return url("sites/site-aggregation/edit/id/{$this->id}");
-                break;
-        }
+        return url("sites/site-aggregation/$action/id/{$this->id}");
     }
 
     public function getResourceId()

@@ -55,11 +55,16 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         queue_css('sites');
     }
 
+    /**
+     * Sets up permissions so on admin side site-admins can only get to their own stuff
+     * @param unknown_type $args
+     */
+
     public function hookDefineAcl($args)
     {
         $acl = $args['acl'];
         $acl->addResource('Sites_Index');
-        $acl->addResource('Sites_Aggregation');
+        $acl->addResource('Sites_SiteAggregation');
         $acl->addRole(new Zend_Acl_Role('site-admin'), null);
 
         $acl->deny('site-admin', 'Items', array('delete-confirm', 'delete'));
@@ -69,20 +74,28 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                     array( 'editSelf', 'showSelf', 'show', 'browse', 'index')
                 );
 
-        $acl->allow(null,
-                array('Sites_Index', 'Sites_Aggregation'),
+        $acl->allow('site-admin',
+                array('Sites_Index', 'Sites_SiteAggregation'),
                 array('edit'),
                 new Omeka_Acl_Assert_Ownership
         );
 
         $acl->allow('site-admin',
-                array('Sites_Index', 'Sites_Aggregation'),
+                array('Sites_Index', 'Sites_SiteAggregation'),
                 array('editSelf', 'browse', 'index', 'add')
         );
+
+        //make sure regular browsing can happen on the public side
+        if(!is_admin_theme()) {
+            $acl->allow(null,
+                        array('Sites_Index', 'Sites_SiteAggregation'),
+                        array('show')
+                        );
+        }
+
         $resources = array('Collections', 'ElementSets', 'Files', 'Plugins',
                 'Settings', 'Security', 'Upgrade', 'Tags', 'Themes',
-                'SystemInfo', 'ItemTypes', 'Users', 'Search', 'Appearance',
-                'Elements');
+                'SystemInfo', 'ItemTypes', 'Appearance', 'Elements');
         $acl->deny('site-admin', $resources);
     }
 
@@ -342,17 +355,6 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                     'action'        => 'browse',
                     )
             )
-        );
-        $router->addRoute(
-                'sites-site-aggregation',
-                new Zend_Controller_Router_Route(
-                        'sites/aggregation/:id',
-                        array(
-                                'module'        => 'sites',
-                                'controller'    => 'site-aggregation',
-                                'action'        => 'show',
-                        )
-                )
         );
 
         $router->addRoute(

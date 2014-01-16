@@ -152,6 +152,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterSearchRecordTypes($searchableRecordTypes) {
         $searchableRecordTypes['Site'] = __('Site');
+        $searchableRecordTypes['SiteContext_Collection'] = __('Collection');
         return $searchableRecordTypes;
     }
 

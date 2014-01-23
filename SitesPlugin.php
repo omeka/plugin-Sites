@@ -59,7 +59,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
     /**
      * Sets up permissions so on admin side site-admins can only get to their own stuff
-     * @param unknown_type $args
+     * @param array $args
      */
 
     public function hookDefineAcl($args)
@@ -72,20 +72,20 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->deny('site-admin', 'Items', array('delete-confirm', 'delete'));
 
         $acl->allow('site-admin',
-                    'Items',
+                    array( 'Items'),
                     array( 'editSelf', 'showSelf', 'show', 'browse', 'index')
                 );
 
         $acl->allow('site-admin',
                 array('Sites_Index', 'Sites_SiteAggregation'),
-                array('edit'),
+                array('edit', 'show', 'showSelf'),
                 new Omeka_Acl_Assert_Ownership
         );
 
         $acl->allow('site-admin',
                 array('Sites_Index', 'Sites_SiteAggregation'),
-                array('editSelf', 'browse', 'index', 'add')
-        );
+                array('editSelf', 'showSelf', 'browse', 'index', 'add')
+                );
 
         //make sure regular browsing can happen on the public side
         if(!is_admin_theme()) {
@@ -414,7 +414,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
         if(is_admin_theme()) {
             $user = current_user();
-            $select->where('owner_id = ?', $user->id);
+            $select->where('items.owner_id = ?', $user->id);
         }
 
         if(!empty($params['site_collection_id'])) {

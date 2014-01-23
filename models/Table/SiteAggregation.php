@@ -7,8 +7,9 @@ class Table_SiteAggregation extends Omeka_Db_Table
         //for site-admins on admin side, hide everything that they don't own
         $select = parent::getSelect();
         $user = current_user();
+        $alias = $this->getTableAlias();
         if($user && ($user->role == 'site-admin') && is_admin_theme()) {
-            $select->where('owner_id = ?', $user->id);
+            $select->where($alias . '.owner_id = ?', $user->id);
         }
         return $select;
     }

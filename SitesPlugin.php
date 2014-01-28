@@ -69,11 +69,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->addResource('Sites_SiteAggregation');
         $acl->addRole(new Zend_Acl_Role('site-admin'), null);
 
-        $acl->deny('site-admin', 'Items', array('delete-confirm', 'delete'));
-
         $acl->allow('site-admin',
                     array( 'Items'),
-                    array( 'editSelf', 'showSelf', 'show', 'browse', 'index')
+                    array( 'editSelf', 'showSelf', 'browse', 'index')
                 );
 
         $acl->allow('site-admin',
@@ -82,6 +80,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
                 new Omeka_Acl_Assert_Ownership
         );
 
+        $acl->deny('site-admin', 'Items', array('delete-confirm', 'delete'));
         $acl->allow('site-admin',
                 array('Sites_Index', 'Sites_SiteAggregation'),
                 array('editSelf', 'showSelf', 'browse', 'index', 'add')

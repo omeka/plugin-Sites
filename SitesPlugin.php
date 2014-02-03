@@ -70,6 +70,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->addResource('Sites_SiteAggregation');
         $acl->addRole(new Zend_Acl_Role('site-admin'), null);
 
+        $acl->allow(array('site-admin'), 'Users', null,
+                    new Omeka_Acl_Assert_User);
+
         $acl->allow('site-admin',
                     array( 'Items'),
                     array( 'editSelf', 'showSelf', 'browse', 'index')
@@ -414,7 +417,9 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
 
         if(is_admin_theme()) {
             $user = current_user();
-            $select->where('items.owner_id = ?', $user->id);
+            if($user->role != 'admin' && $user->role != 'super') {
+                $select->where('items.owner_id = ?', $user->id);
+            }
         }
 
         if(!empty($params['site_collection_id'])) {

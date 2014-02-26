@@ -78,7 +78,7 @@ class Sites_SiteAggregationController extends Omeka_Controller_AbstractActionCon
                 }
 
                 //dig up the sites that correspond to the keys passed
-                foreach($_POST['site_keys'] as $siteKey) {
+                foreach($_POST['site_key'] as $key) {
                     $site = $this->_helper->db->getTable('Site')->findByKey($key);
                     if($site) {
                         $site->site_aggregation_id = $record->id;

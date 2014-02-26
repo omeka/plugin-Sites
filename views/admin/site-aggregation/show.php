@@ -2,7 +2,6 @@
 echo head(array('title'=>$site_aggregation->name));
 ?>
 
-<h1><?php echo metadata($site_aggregation, 'name'); ?></h1>
 <section class='five columns alpha'>
 <div>
 <?php echo metadata($site_aggregation, 'description'); ?>

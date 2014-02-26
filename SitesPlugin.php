@@ -167,7 +167,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         CREATE TABLE IF NOT EXISTS `$db->Site` (
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `site_aggregation_id` int(10) unsigned NULL,
-          `owner_id` int(10) unsigned NULL,
+          `owner_id` int(10) unsigned NOT NULL,
           `url` text NULL,
           `super_email` text NOT NULL,
           `admin_email` text NOT NULL,
@@ -198,6 +198,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
         `name` text NULL,
         `description` text NULL,
+        `owner_id` int(10) unsigned NOT NULL,
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci
         ";

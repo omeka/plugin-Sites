@@ -62,7 +62,7 @@ Search by:
         <?php else: ?>
         <td>
         <?php endif; ?>
-            <span class='title'><a href="<?php echo record_url($site, 'edit'); ?>"><?php echo metadata($site, 'title') ?></a></span>
+            <span class='title'><a href="<?php echo record_url($site, 'show'); ?>"><?php echo metadata($site, 'title') ?></a></span>
 
         </td>
         <td><?php echo $site->affiliation; ?></td>

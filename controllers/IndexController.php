@@ -61,6 +61,7 @@ class Sites_IndexController extends Omeka_Controller_AbstractActionController
 
     public function sendApprovalEmail($site, $owner)
     {
+debug('sendApprovalEmail');
         $to = $site->admin_email;
         $from = get_option('administrator_email');
         $subject = "Omeka Commons participation approved!";
@@ -77,7 +78,9 @@ and interests.</p>
 <p>A user has been created for you, with username {$owner->username}. You can request a password and sign in <a href='" . WEB_ROOT . "users/login'>here</a>.</p>  
 
 <p>API key: " . $site->api_key . "</p>";
-
+debug('before send approval email');
+debug($site->title);
+debug($to);
         $mail = new Zend_Mail();
         $mail->setBodyHtml($body);
         $mail->setFrom($from, "Omeka Commons");
@@ -115,6 +118,7 @@ and interests.</p>
 
     protected function approveSite($site, $ajax = true)
     {
+        debug('approveSite');
         $site->date_approved = Zend_Date::now()->toString('yyyy-MM-dd HH:mm:ss');
         $site->save();
         if(!file_exists(SITES_PLUGIN_DIR . '/views/shared/images/' . $site->id)) {
@@ -127,6 +131,7 @@ and interests.</p>
             $owner->save();
             $activation = UsersActivations::factory($owner);
             $activation->save();
+            debug('before send approval email');
             $this->sendApprovalEmail($site, $owner);
         } catch(Exception $e) {
             _log($e);

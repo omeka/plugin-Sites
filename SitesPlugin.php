@@ -48,6 +48,7 @@ class SitesPlugin extends Omeka_Plugin_AbstractPlugin
             $group->visibility = 'closed';
             $group->title = $user->name . "'s Group";
             $group->owner_id = $user->id;
+            $group->flagged = 0;
             $group->save();
             $group->addMember($user, 0, 'is_owner');
         }
